@@ -9,6 +9,12 @@ public class BallFactory {
 	public BallFactory(Config c)
 	{
 		this.config = c;
+		try {
+			c.Load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public Ball CreateBall(int x, int y, int r) {
 		Ball bal = null;

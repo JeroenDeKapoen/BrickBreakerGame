@@ -16,8 +16,9 @@ import ui.controller.ControlPanel;
 public class BrickBreakerUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-    
+    private Config config;
     public void start() throws IOException{
+    	config = new Config();
     	setSize(new Dimension(630,575));
     	
     	JLabel titleLabel = createTitleLabel();
@@ -29,6 +30,7 @@ public class BrickBreakerUI extends JFrame{
         JPanel mainPanel = createMainPanel(titlePanel, infoPanel, image);
 
         setContentPane(mainPanel);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
         setVisible(true);
 
     }
@@ -36,15 +38,15 @@ public class BrickBreakerUI extends JFrame{
 	private BrickBreakerGame createGame() throws IOException {
 		int breedte = 400;
     	int hoogte = 500;
-    	Config c = new Config();
-    	BallFactory balfac = new BallFactory(c);
+    	
+    	BallFactory balfac = new BallFactory(config);
     	Ball bal = balfac.CreateBall(200, 30, 10);	
     	PaddleFactory paddlefac = new PaddleFactory();
     	Paddle plankje = paddlefac.CreatePaddle(150, 0, 20, 100); //TODO settings uitlezen, in paddlefactory
     	int aantalstenen = 16;
     	int aantallevens = 3;
     	
-    	return new BrickBreakerGame(breedte, hoogte, bal, plankje, aantalstenen, aantallevens, c);
+    	return new BrickBreakerGame(breedte, hoogte, bal, plankje, aantalstenen, aantallevens, config);
 	}
 
 	private JPanel createMainPanel(JPanel titlePanel, JPanel infoPanel, ImagePanel image) {
@@ -57,7 +59,7 @@ public class BrickBreakerUI extends JFrame{
 
 	private JPanel createInfoPanel(ImagePanel image, BrickBreakerGame game) {
 		TextfieldPanel text = new TextfieldPanel();
-		ControlPanel control = new ControlPanel(text, image, game);
+		ControlPanel control = new ControlPanel(text, image, game, config);
         
 		JPanel infoPanel = new JPanel(new BorderLayout());
         infoPanel.add(text, BorderLayout.NORTH);

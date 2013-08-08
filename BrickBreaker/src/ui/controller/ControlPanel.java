@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -13,14 +14,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import ui.view.OptionsUI;
 import ui.view.TextfieldPanel;
 import ui.view.ImagePanel;
+import db.Config;
 import domain.BrickBreakerGame;
 
 public class ControlPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JButton restart, pause, help;
+	private JButton restart, pause, help, options;
 
 	private TextfieldPanel text;
 	private ImagePanel image;
@@ -31,10 +34,10 @@ public class ControlPanel extends JPanel {
 	private Timer timer;
 	private Timer swingTimer;
 	private static final int TIMER_DELAY = 5;
-
+	private Config config;
 	private int timeDisplay;
-
-	public ControlPanel(TextfieldPanel text, ImagePanel image,BrickBreakerGame game) {
+	public ControlPanel(TextfieldPanel text, ImagePanel image,BrickBreakerGame game, Config c) {
+		this.config = c;
 		setText(text);
 		setImage(image);
 		setGame(game);		
@@ -46,10 +49,12 @@ public class ControlPanel extends JPanel {
 	}
 
 	private void setUpPanelWitButtons() {
-		this.setLayout(new GridLayout(3, 1));
+		this.setLayout(new GridLayout(4, 1));
+		this.add(options);
 		this.add(help);
 		this.add(restart);
 		this.add(pause);
+	
 	}
 
 	private void addKeyListener() {
@@ -72,6 +77,8 @@ public class ControlPanel extends JPanel {
 		pause.addActionListener(action);
 		help = new JButton("HELP");
 		help.addActionListener(action);
+		options = new JButton("OPTIONS");
+		options.addActionListener(action);
 	}
 
 	private void resetGame() {
@@ -86,6 +93,7 @@ public class ControlPanel extends JPanel {
 		swingTimer.start();
 	}
 	private void stopTimers() {
+		pause.setText("START");
 		timer.stop();
 		swingTimer.stop();
 	}
@@ -143,6 +151,14 @@ public class ControlPanel extends JPanel {
 				pauseGame();
 			} else if (e.getActionCommand().equals("HELP")) {
 				JOptionPane.showMessageDialog(null,"Press space bar to start the game, hit the ball with your paddle and try to get rid of all the bricks",	"INSTRUCTIONS", JOptionPane.PLAIN_MESSAGE);
+			} else if (e.getActionCommand().equals("OPTIONS")){
+				OptionsUI u = null;
+				try {
+					 u = new OptionsUI(config);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 	}
